@@ -1,6 +1,5 @@
 package com.example.inventoryapp.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -41,29 +40,51 @@ fun InventoryScreen(navController: NavHostController) {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it.trim() },
-            label = { Text("Search") },
-            modifier = Modifier.fillMaxWidth()
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)) {
 
-        LazyColumn {
-            val filtered = inventory.filter {
-                it.itemName.contains(searchQuery, ignoreCase = true)
-                        || it.customerName.contains(searchQuery, ignoreCase = true)
-                        || it.phoneNumber.contains(searchQuery, ignoreCase = true)
-                        || it.aadhaarNumber.contains(searchQuery, ignoreCase = true)
-                        || it.serialNumber.contains(searchQuery, ignoreCase = true)
-            }
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it.trim() },
+                label = { Text("Search") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-            items(filtered.size) { index ->
-                val item = filtered[index]
-                InventoryCard(item, onSell = {
-                    navController.navigate("transaction?sale=true&serial=${item.serialNumber}&item=${item.itemName}")
-                })
+            LazyColumn {
+                val filtered = inventory.filter {
+                    it.itemName.contains(searchQuery, ignoreCase = true)
+                            || it.customerName.contains(searchQuery, ignoreCase = true)
+                            || it.phoneNumber.contains(searchQuery, ignoreCase = true)
+                            || it.aadhaarNumber.contains(searchQuery, ignoreCase = true)
+                            || it.serialNumber.contains(searchQuery, ignoreCase = true)
+                }
+
+                items(filtered.size) { index ->
+                    val item = filtered[index]
+                    InventoryCard(item, onSell = {
+                        navController.navigate("transaction?sale=true&serial=${item.serialNumber}&item=${item.itemName}")
+                    })
+                }
             }
+        }
+
+        // Floating buttons
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ExtendedFloatingActionButton(
+                onClick = { navController.navigate("transaction") },
+                text = { Text("Add Txn") }
+            )
+            ExtendedFloatingActionButton(
+                onClick = { navController.navigate("scanner") },
+                text = { Text("Scan IMEI") }
+            )
         }
     }
 }
@@ -85,7 +106,7 @@ fun InventoryCard(item: InventoryItem, onSell: () -> Unit) {
 
             Spacer(Modifier.height(8.dp))
 
-            Button(onClick = onSell, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
+            Button(onClick = onSell) {
                 Text("Sell This Item")
             }
         }
