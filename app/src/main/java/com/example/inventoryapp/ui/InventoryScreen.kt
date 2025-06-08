@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment // ✅ Required for .align(Alignment.BottomEnd)
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -70,7 +71,7 @@ fun InventoryScreen(navController: NavHostController) {
             }
         }
 
-        // Floating buttons
+        // ✅ Floating buttons
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -79,11 +80,11 @@ fun InventoryScreen(navController: NavHostController) {
         ) {
             ExtendedFloatingActionButton(
                 onClick = { navController.navigate("transaction") },
-                text = { Text("Add Txn") }
+                content = { Text("Add Txn") } // ✅ fixed
             )
             ExtendedFloatingActionButton(
                 onClick = { navController.navigate("scanner") },
-                text = { Text("Scan IMEI") }
+                content = { Text("Scan IMEI") } // ✅ fixed
             )
         }
     }
